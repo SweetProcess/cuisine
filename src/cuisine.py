@@ -397,10 +397,12 @@ def run_local(command, sudo=False, shell=True, pty=True, combine_stderr=None):
 	# FIXME: This does not seem to stream
 	def stdout_reader():
 		for line in process.stdout:
+			line = line.decode('utf-8')
 			if line: logging.debug(line.rstrip("\n").rstrip("\r"))
 			out.append(line)
 	def stderr_reader():
 		for line in process.stderr:
+			line = line.decode('utf-8')
 			logging.error(line.rstrip("\n").rstrip("\r"))
 			err.append(line)
 	t0 = threading.Thread(target=stdout_reader)
@@ -677,6 +679,7 @@ def file_read(location, default=None):
 
 def file_exists(location):
 	"""Tests if there is a *remote* file at the given location."""
+	print(location)
 	return is_ok(run('test -e %s && echo OK ; true' % (shell_safe(location))))
 
 def file_is_file(location):
