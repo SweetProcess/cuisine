@@ -708,11 +708,15 @@ def file_attribs_get(location):
 		return None
 
 @logged
-def file_write(location, content, mode=None, owner=None, group=None, sudo=None, check=True, scp=False):
+def file_write(location, content_binary, mode=None, owner=None, group=None, sudo=None,
+			   check=True, scp=False):
 	"""Writes the given content to the file at the given remote
 	location, optionally setting mode/owner/group."""
 	# FIXME: Big files are never transferred properly!
 	# Gets the content signature and write it to a secure tempfile
+
+	content = content_binary.encode("utf-8")
+
 	use_sudo       = sudo if sudo is not None else is_sudo()
 	sig            = hashlib.md5(content).hexdigest()
 	fd, local_path = tempfile.mkstemp()
