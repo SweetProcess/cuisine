@@ -26,7 +26,7 @@ setup(
         "ssh",
     ],
     install_requires=[
-        "fabric",
+        "fab-classic",
     ],
     package_dir={"": "src"},
     py_modules=["cuisine"],
