@@ -375,7 +375,7 @@ def is_ok( text ):
 #
 # =============================================================================
 
-def run_local(command, sudo=False, shell=True, pty=True, combine_stderr=None):
+def run_local(command, sudo=False, shell=True, pty=True, combine_stderr=None, **kwargs):
 	"""
 	Local implementation of fabric.api.run() using subprocess.
 
