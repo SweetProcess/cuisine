@@ -746,7 +746,7 @@ def file_write(location, content_binary, mode=None, owner=None, group=None, sudo
 				):
 					# SEE: http://unix.stackexchange.com/questions/22834/how-to-uncompress-zlib-data-in-unix
 					# TODO: Make sure this openssl command works everywhere, maybe we should use a text_base64_decode?
-					result = run("echo '%s' | openssl base64 -A -d -out %s" % (content, shell_safe(location)))
+					result = run("echo '%s' | openssl base64 -A -d -out %s" % (base64.b64encode(content).decode('utf-8'), shell_safe(location)))
 					if "openssl:Error" in result:
 						fabric.api.abort('cuisine.file_write("%s",...) failed because openssl does not support base64 command.' % (location))
 	# Remove the local temp file
