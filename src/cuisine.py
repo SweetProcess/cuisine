@@ -856,7 +856,7 @@ def file_link(source, destination, symbolic=True, mode=None, owner=None, group=N
 def file_base64(location):
 	"""Returns the base64-encoded content of the file at the given location."""
 	if fabric.api.env[OPTION_HASH] == "python":
-		return run("cat {0} | python -c 'import sys,base64;sys.stdout.write(base64.b64encode(sys.stdin.read()))'".format(shell_safe((location))))
+		return run("cat {0} | python -c 'import sys;sys.stdout.write(sys.stdin.read())'".format(shell_safe((location))))
 	else:
 		return run("cat {0} | openssl base64".format(shell_safe((location))))
 
