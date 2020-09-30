@@ -560,6 +560,7 @@ def text_replace_line(text, old, new, find=lambda old, new: old == new, process=
 	"""
 	res = []
 	replaced = 0
+	text = text.decode('utf-8')
 	eol = text_detect_eol(text)
 	for line in text.split(eol):
 		if find(process(line), process(old)):
