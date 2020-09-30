@@ -433,6 +433,7 @@ def run_local(command, sudo=False, shell=True, pty=True, combine_stderr=None, **
 			msg += "!\nExecuted: %s" % (command)
 		logging.debug(msg)
 		for _ in err.split("\n"):logging.error(_)
+		print(msg, out, err)
 		fabric.utils.error(message=msg, stdout=out, stderr=err)
 	# Attach return code to output string so users who have set things to
 	# warn only, can inspect the error code.
@@ -675,7 +676,7 @@ def file_read(location, default=None):
 		fabric.api.hide('stdout')
 	):
 		frame = file_base64(location)
-		return base64.b64decode(frame)
+		return frame
 
 def file_exists(location):
 	"""Tests if there is a *remote* file at the given location."""
@@ -825,7 +826,7 @@ def file_append(location, content, mode=None, owner=None, group=None):
 	"""Appends the given content to the remote file at the given
 	location, optionally updating its mode/owner/group."""
 	# TODO: Make sure this openssl command works everywhere, maybe we should use a text_base64_decode?
-	run('echo "%s" | openssl base64 -A -d >> %s' % (base64.b64encode(content), shell_safe(location)))
+	run('echo "%s" | openssl base64 -A -d >> %s' % (content, shell_safe(location)))
 	file_attribs(location, mode, owner, group)
 
 @logged
@@ -870,7 +871,7 @@ def file_sha256(location):
 		if not _hashlib_supported():
 			raise EnvironmentError("Remote host has not hashlib support. Please, use select_hash('openssl')")
 		if file_exists(location):
-			return run("cat {0} | python -c 'import sys,hashlib;sys.stdout.write(hashlib.sha256(sys.stdin.read()).hexdigest())'".format(shell_safe((location))))
+			return run("cat {0} | python -c 'import sys,hashlib;sys.stdout.write(hashlib.sha256(sys.stdin.read().encode(\"utf-8\")).hexdigest())'".format(shell_safe((location))))
 		else:
 			return None
 	else:
@@ -889,7 +890,9 @@ def file_md5(location):
 		if not _hashlib_supported():
 			raise EnvironmentError("Remote host has not hashlib support. Please, use select_hash('openssl')")
 		if file_exists(location):
-			return run("cat {0} | python -c 'import sys,hashlib;sys.stdout.write(hashlib.md5(sys.stdin.read()).hexdigest())'".format(shell_safe((location))))
+			return run("cat {0} | python -c 'import sys,hashlib;sys.stdout.write("
+					   "hashlib.md5(sys.stdin.read().encode(\"utf-8\")).hexdigest("
+					   "))'".format(shell_safe((location))))
 		else:
 			return None
 	else:
