@@ -433,7 +433,6 @@ def run_local(command, sudo=False, shell=True, pty=True, combine_stderr=None, **
 			msg += "!\nExecuted: %s" % (command)
 		logging.debug(msg)
 		for _ in err.split("\n"):logging.error(_)
-		print(msg, out, err)
 		fabric.utils.error(message=msg, stdout=out, stderr=err)
 	# Attach return code to output string so users who have set things to
 	# warn only, can inspect the error code.
@@ -643,7 +642,7 @@ def file_local_read(location):
 	"""Reads a *local* file from the given location, expanding '~' and
 	shell variables."""
 	p = os.path.expandvars(os.path.expanduser(location))
-	f = file(p, 'rb')
+	f = open(p, 'rb')
 	t = f.read()
 	f.close()
 	return t
@@ -680,7 +679,6 @@ def file_read(location, default=None):
 
 def file_exists(location):
 	"""Tests if there is a *remote* file at the given location."""
-	print(location)
 	return is_ok(run('test -e %s && echo OK ; true' % (shell_safe(location))))
 
 def file_is_file(location):
@@ -778,7 +776,7 @@ def file_upload(remote, local, sudo=None, scp=False):
 	exists or the content are different."""
 	# FIXME: Big files are never transferred properly!
 	use_sudo = is_sudo() or sudo #XXX: this 'sudo' kw arg shadows the function named 'sudo'
-	f       = file(local, 'rb')
+	f       = open(local, 'rb')
 	content = f.read()
 	f.close()
 	sig     = hashlib.md5(content).hexdigest()

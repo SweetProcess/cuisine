@@ -199,7 +199,7 @@ class Files(unittest.TestCase):
 		cuisine.file_write(path, content, check=False)
 		sig = cuisine.file_sha256(path)
 		with open(path) as f:
-			file_sig = hashlib.sha256(f.read()).hexdigest()
+			file_sig = hashlib.sha256(f.read().encode('utf-8')).hexdigest()
 		assert sig == file_sig
 
 	def testExists( self ):
@@ -243,6 +243,13 @@ class SSHKeys(unittest.TestCase):
 		d = cuisine.user_check(USER, need_passwd=False)
 		keyf = d["home"] + "/.ssh/authorized_keys"
 		keys = [line.strip() for line in open(keyf)]
+
+		print(self.key)
+
+		print(keyf)
+
+		print(keys)
+
 		assert keys.count(self.key) == 1
 
 	def testUnauthorize( self ):
