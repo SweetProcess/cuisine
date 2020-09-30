@@ -189,7 +189,7 @@ class Files(unittest.TestCase):
 		path    = "/tmp/cuisine.test"
 		cuisine.file_write(path, content, check=False)
 		assert os.path.exists(path)
-		with file(path) as f:
+		with open(path) as f:
 			assert f.read() == content
 		os.unlink(path)
 
@@ -198,7 +198,7 @@ class Files(unittest.TestCase):
 		path    = "/tmp/cuisine.test"
 		cuisine.file_write(path, content, check=False)
 		sig = cuisine.file_sha256(path)
-		with file(path) as f:
+		with open(path) as f:
 			file_sig = hashlib.sha256(f.read()).hexdigest()
 		assert sig == file_sig
 
