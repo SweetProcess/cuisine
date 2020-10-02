@@ -718,7 +718,10 @@ def file_write(location, content_binary, mode=None, owner=None, group=None, sudo
 	# FIXME: Big files are never transferred properly!
 	# Gets the content signature and write it to a secure tempfile
 
-	content = content_binary.encode("utf-8")
+	try:
+		content = content_binary.encode("utf-8")
+	except AttributeError:
+		content = content_binary
 
 	use_sudo       = sudo if sudo is not None else is_sudo()
 	sig            = hashlib.md5(content).hexdigest()
