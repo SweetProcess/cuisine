@@ -825,7 +825,7 @@ def file_append(location, content, mode=None, owner=None, group=None):
 	"""Appends the given content to the remote file at the given
 	location, optionally updating its mode/owner/group."""
 	# TODO: Make sure this openssl command works everywhere, maybe we should use a text_base64_decode?
-	run('echo "%s" | openssl base64 -A -d >> %s' % (content, shell_safe(location)))
+	run('echo "%s" | openssl base64 -A -d >> %s' % (base64.b64encode(content.encode('utf-8')).decode('utf-8'), shell_safe(location)))
 	file_attribs(location, mode, owner, group)
 
 @logged
